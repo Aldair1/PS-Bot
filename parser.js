@@ -13,9 +13,9 @@ let ranks = [' ', '+', '\u2605', '%', '@', '#', '&', '~', 'admin'];
 let permissions = Config.defaultPermissions;
 
 try {
-	permissions = JSON.parse(fs.readFileSync('config/permissions.json', 'utf8'));
+	permissions = JSON.parse(fs.readFileSync(DATA_DIR + 'permissions.json', 'utf8'));
 } catch (e) {
-	fs.writeFileSync('config/permissions.json', JSON.stringify(Config.defaultPermissions));
+	fs.writeFileSync(DATA_DIR + 'permissions.json', JSON.stringify(Config.defaultPermissions));
 }
 
 module.exports = class Parser {
@@ -24,7 +24,7 @@ module.exports = class Parser {
 		this.server = Servers[serverid];
 
 		try {
-			this.ignoreList = JSON.parse(fs.readFileSync('config/ignore.json', 'utf8'));
+			this.ignoreList = JSON.parse(fs.readFileSync(DATA_DIR  + 'ignore.json', 'utf8'));
 			for (let u in this.ignoreList) {
 				if (this.ignoreList[u] < Date.now()) delete this.ignoreList[u];
 			}
@@ -87,13 +87,13 @@ module.exports = class Parser {
 		case 'join':
 		case 'j':
 		case 'J':
-			if (Tools.updateSeen) Tools.updateSeen(parts[2].substr(1, parts[2].length), 'joining', server.id, (~server.privaterooms.indexOf(roomid) ? "a private room" : roomid));
+			if (Tools.updateSeen) Tools.updateSeen(parts[2].substr(1, parts[2].length), 'entrando', server.id, (~server.privaterooms.indexOf(roomid) ? "a private room" : roomid));
 			if (Tools.sendTell) Tools.sendTell(parts[2].substr(1, parts[2].length), server);
 			this.logChat(toId(roomid), data);
 			break;
 		case 'l':
 		case 'L':
-			if (Tools.updateSeen) Tools.updateSeen(parts[2].substr(1, parts[2].length), 'leaving', server.id, (~server.privaterooms.indexOf(roomid) ? "a private room" : roomid));
+			if (Tools.updateSeen) Tools.updateSeen(parts[2].substr(1, parts[2].length), 'saliendo', server.id, (~server.privaterooms.indexOf(roomid) ? "a private room" : roomid));
 			this.logChat(toId(roomid), data);
 			break;
 		case 'raw':
@@ -270,26 +270,26 @@ module.exports = class Parser {
 		// but this will work for now
 		let date = new Date();
 		try {
-			fs.statSync('logs/chat');
+			fs.statSync(LOGS_DIR + 'chat');
 		} catch (e) {
-			fs.mkdirSync('logs/chat', '0755');
+			fs.mkdirSync(LOGS_DIR + 'chat', '0755');
 		}
 		try {
-			fs.statSync('logs/chat/' + this.serverid);
+			fs.statSync(LOGS_DIR + 'chat/' + this.serverid);
 		} catch (e) {
-			fs.mkdirSync('logs/chat/' + this.serverid, '0755');
+			fs.mkdirSync(LOGS_DIR + 'chat/' + this.serverid, '0755');
 		}
 		try {
-			fs.statSync('logs/chat/' + this.serverid + '/' + room);
+			fs.statSync(LOGS_DIR + 'chat/' + this.serverid + '/' + room);
 		} catch (e) {
-			fs.mkdirSync('logs/chat/' + this.serverid + '/' + room, '0755');
+			fs.mkdirSync(LOGS_DIR + 'chat/' + this.serverid + '/' + room, '0755');
 		}
 		try {
-			fs.statSync('logs/chat/' + this.serverid + '/' + room + '/' + Tools.toTimeStamp(date).split(' ')[0]);
+			fs.statSync(LOGS_DIR + 'chat/' + this.serverid + '/' + room + '/' + Tools.toTimeStamp(date).split(' ')[0]);
 		} catch (e) {
-			fs.mkdirSync('logs/chat/' + this.serverid + '/' + room + '/' + Tools.toTimeStamp(date).split(' ')[0], '0755');
+			fs.mkdirSync(LOGS_DIR + 'chat/' + this.serverid + '/' + room + '/' + Tools.toTimeStamp(date).split(' ')[0], '0755');
 		}
-		fs.appendFileSync('logs/chat/' + this.serverid + '/' + room + '/' + Tools.toTimeStamp(date).split(' ')[0] + '/' + Tools.toTimeStamp(date).split(' ')[0] + '.txt', data + '\n');
+		fs.appendFileSync(LOGS_DIR + 'chat/' + this.serverid + '/' + room + '/' + Tools.toTimeStamp(date).split(' ')[0] + '/' + Tools.toTimeStamp(date).split(' ')[0] + '.txt', data + '\n');
 	}
 
 	login(name, pass) {
