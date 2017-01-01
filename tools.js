@@ -6,7 +6,7 @@ const https = require('https');
 
 let regdateCache = {};
 try {
-	regdateCache = JSON.parse(fs.readFileSync('config/regdate.json', 'utf8'));
+	regdateCache = JSON.parse(fs.readFileSync(DATA_DIR + 'regdate.json', 'utf8'));
 } catch (e) {}
 
 module.exports = {
@@ -17,9 +17,9 @@ module.exports = {
 	},
 	log: function (text, serverid, error) {
 		if (error) {
-			fs.appendFileSync('logs/error.txt', '[' + serverid + '] ' + text);
+			fs.appendFileSync(LOGS_DIR + 'error.txt', '[' + serverid + '] ' + text);
 		}
-		fs.appendFileSync('logs/' + serverid + '.log', text + '\n');
+		fs.appendFileSync(LOGS_DIR + serverid + '.log', text + '\n');
 		console.log(text);
 	},
 	randomString: function (length) {
@@ -61,7 +61,7 @@ module.exports = {
 				}
 				if (date !== 0) {
 					regdateCache[target] = date;
-					fs.writeFileSync('config/regdate.json', JSON.stringify(regdateCache));
+					fs.writeFileSync(DATA_DIR + 'regdate.json', JSON.stringify(regdateCache));
 				}
 				callback((date === 0 ? false : date));
 			});
