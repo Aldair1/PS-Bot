@@ -1,6 +1,6 @@
 'use strict';
 
-const db = new sqlite3.Database('./config/tells.db', function () {
+const db = new sqlite3.Database(DATA_DIR + 'tells.db', function () {
 	db.run("CREATE TABLE IF NOT EXISTS users (userid TEXT, sender TEXT, message TEXT, date INTEGER)", function (err) {
 		db.run("SELECT date FROM users WHERE date <= $expireTime", {$expireTime: Date.now() - 365 * 24 * 60 * 60 * 1000});
 	});
@@ -19,7 +19,7 @@ function sendTell(user, server) {
 		});
 		let messages = [];
 		for (let u in rows) {
-			messages.push(moment(rows[u].date).format("(dddd, MMMM Do YYYY, h:mm:ss A) ") + rows[u].sender + " said: " + rows[u].message);
+			messages.push(moment(rows[u].date).format("(dddd, MMMM Do YYYY, h:mm:ss A) ") + rows[u].sender + " dijo: " + rows[u].message);
 		}
 		if (messages.length < 4) {
 			for (let u in messages) server.send("/msg " + user + ", " + messages[u]);
@@ -39,7 +39,7 @@ exports.commands = {
 		for (let u in splitTarget) splitTarget[u] = splitTarget[u].trim();
 
 		if (!toId(splitTarget[0]) || toId(splitTarget[0]).length > 19) return this.sendReply('"' + splitTarget[0] + '" is not a valid username.');
-		if (splitTarget[1].length > 250) return this.sendReply("Tells may not be longer than 250 characters.");
+		if (splitTarget[1].length > 250) return this.sendReply("Tu mensaje es mayor a 250 caracteres.");
 
 		let targetId = toId(splitTarget[0]);
 
@@ -48,7 +48,7 @@ exports.commands = {
 			if (rows[0] && rows[0]['COUNT(*)'] >= MAX_PENDING_TELLS) return this.sendReply("That users mailbox is currently full.");
 			db.run("INSERT INTO users (userid, sender, message, date) VALUES ($userid, $sender, $message, $date)", {$userid: targetId, $sender: user, $message: splitTarget[1], $date: Date.now()}, err => {
 				if (err) return this.sendReply("Error sending tell: " + err);
-				this.sendReply("Your message has been sent.");
+				this.sendReply("Tu mensaje se ha guardado.");
 			});
 		});
 	},
