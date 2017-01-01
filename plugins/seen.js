@@ -1,6 +1,6 @@
 'use strict';
 
-const db = new sqlite3.Database('./config/seen.db', function () {
+const db = new sqlite3.Database(DATA_DIR + 'seen.db', function () {
 	db.run("CREATE TABLE IF NOT EXISTS users (userid TEXT PRIMARY KEY, name TEXT, lastOnline INTEGER, lastOnlineServer TEXT, lastOnlineAction TEXT, room TEXT)");
 });
 const moment = require('moment');
@@ -43,8 +43,8 @@ exports.commands = {
 			});
 		} else {
 			lastSeen(targetid, data => {
-				if (!data) return this.sendReply(Tools.sanitize(target) + " has never been seen before.");
-				return this.sendReply(Tools.sanitize(data.name) + " was last seen " + data.action + (data.action === "talking" ? " in " : " ") + " **" + data.room + "** on **" + data.server + "** " + moment(data.date).fromNow());
+				if (!data) return this.sendReply(Tools.sanitize(target) + " nunca se ha visto.");
+				return this.sendReply(Tools.sanitize(data.name) + " fue visto " + data.action + (data.action === "hablando" ? " en " : " ") + " **" + data.room + "** hace **" + data.server + "** " + moment(data.date).fromNow());
 			});
 		}
 	},
