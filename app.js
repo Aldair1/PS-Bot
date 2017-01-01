@@ -2,6 +2,10 @@
 
 const WebSocket = require('ws');
 const fs = require('fs');
+/* ----------------Data-Directory------------*/
+global.DATA_DIR = (process.env.OPENSHIFT_DATA_DIR) ? process.env.OPENSHIFT_DATA_DIR : './config/';
+global.LOGS_DIR = (process.env.OPENSHIFT_DATA_DIR) ? (process.env.OPENSHIFT_DATA_DIR + 'logs/') : './logs/';
+/* ------------------------------------------*/
 
 global.sqlite3 = require('sqlite3');
 global.Tools = require('./tools.js');
@@ -10,9 +14,9 @@ try {
 } catch (err) {
 	if (err.code !== 'MODULE_NOT_FOUND') throw err;
 	fs.writeFileSync('config/config.js', fs.readFileSync('config/config-example.js'));
-	return console.log("Please edit config/config.js before running the bot");
+	return console.log("Porfavor edita config.js antes de iniciar el bot");
 }
-if (Config.servers['exampleserver']) return console.log("Please edit config/config.js before running the bot");
+if (Config.servers['exampleserver']) return console.log("Porfavor edita config.js antes de iniciar el bot");
 global.Parser = require('./parser.js');
 global.Servers = {};
 
