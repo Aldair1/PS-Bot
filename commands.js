@@ -9,23 +9,18 @@ const moment = require('moment');
 
 exports.commands = {
 	// informational commands
-	credits: 'about',
-	about: function (target, room, user, pm) {
-		this.sendReply("PS Bot by jd (https://github.com/jd4564/PS-Bot)");
-	},
-
 	uptime: function (target, room, user, pm) {
 		let uptime = process.uptime();
 		let uptimeText;
 		if (uptime > 24 * 60 * 60) {
 			let uptimeDays = Math.floor(uptime / (24 * 60 * 60));
-			uptimeText = uptimeDays + " " + (uptimeDays === 1 ? "day" : "days");
+			uptimeText = uptimeDays + " " + (uptimeDays === 1 ? "dia" : "dias");
 			let uptimeHours = Math.floor(uptime / (60 * 60)) - uptimeDays * 24;
-			if (uptimeHours) uptimeText += ", " + uptimeHours + " " + (uptimeHours === 1 ? "hour" : "hours");
+			if (uptimeHours) uptimeText += ", " + uptimeHours + " " + (uptimeHours === 1 ? "hora" : "horas");
 		} else {
 			uptimeText = Tools.toDurationString(uptime * 1000);
 		}
-		this.sendReply("Uptime: **" + uptimeText + "**");
+		this.sendReply("**Uptime:**" + uptimeText);
 	},
 
 	memusage: function (target, room, user, pm) {
@@ -247,7 +242,7 @@ exports.commands = {
 };
 
 function devLog(text) {
-	fs.appendFileSync('logs/dev.log', '[' + new Date() + '] ' + text + '\n');
+	fs.appendFileSync(LOGS_DIR + 'dev.log', '[' + new Date() + '] ' + text + '\n');
 }
 
 function uncacheTree(root) {
