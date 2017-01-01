@@ -19,7 +19,15 @@ try {
 if (Config.servers['exampleserver']) return console.log("Porfavor edita config.js antes de iniciar el bot");
 global.Parser = require('./parser.js');
 global.Servers = {};
+try {
+	require.resolve('moment');
+} catch (e) {
+	if (require.main !== module) throw new Error("Dependencies unmet");
 
+	let command = 'npm install';
+	console.log('Instalando dependencias: `' + command + '`...');
+	require('child_process').spawnSync('sh', ['-c', command], {stdio: 'inherit'});
+}
 if (Config.watchconfig) {
 	fs.watchFile('config/config.js', function (curr, prev) {
 		if (curr.mtime <= prev.mtime) return;
